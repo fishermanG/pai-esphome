@@ -1,0 +1,44 @@
+esphome:
+  name: esp-paradox-alarm
+  platform: ESP8266
+  board: nodemcuv2
+
+logger:
+  baud_rate: 0
+
+api:
+
+ota:
+  password: "xxx"
+
+wifi:
+  ssid: "WIFI_SSID"
+  password: "secret_ssid"
+external_components:
+  - source: github://oxan/esphome-stream-server
+
+uart:
+  id: uart_bus
+  baud_rate: 9600
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  stop_bits: 1
+
+stream_server:
+  uart_id: uart_bus
+  port: 23
+  
+sensor:
+  - platform: uptime
+    name: Uptime Sensor
+    
+switch:
+  - platform: gpio
+    pin: GPIO5 #D5
+    inverted: false
+    id: relay
+    name: "Alarm Trigger"
+    icon: "mdi:alarm"
+    on_turn_on:
+    - delay: 1200ms
+    - switch.turn_off: relay
